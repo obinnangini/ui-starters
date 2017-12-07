@@ -50,7 +50,7 @@ const common = {
             js: 'babel-loader',
           },
         },
-        include: [path.resolve('src'), /node_modules\\bootstrap-vue/],
+        include: [path.resolve('src'), path.resolve('node_modules', 'bootstrap-vue')],
       },
       {
         test: /\.(js)$/,
