@@ -30,6 +30,14 @@ export default class App extends Component {
       <div>
         {foo}
         <button className="btn btn-secondary" onClick={this.handleClick}>Click count: {clickCount}</button>
+        <div className="grid">
+          <div className="col-xl-6 col-md-12">
+            Foobar
+          </div>
+          <div className="col-xl-6 col-md-12">
+            Foobar
+          </div>
+        </div>
       </div>
     );
   }

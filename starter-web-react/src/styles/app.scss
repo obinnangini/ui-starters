@@ -1,5 +1,11 @@
-@import '~bootstrap/scss/bootstrap';
+// @import '~bootstrap/scss/bootstrap';
+@import '~bourbon/core/bourbon';
+@import '~bourbon-neat/core/neat';
+@import 'breakpoints';
+@import 'grid';
 
 body {
   background-color: #e8e8e8;
 }
+
+

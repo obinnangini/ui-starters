@@ -2,9 +2,10 @@ const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const eslintFormatter = require('eslint-friendly-formatter');
-const StyleLintPlugin = require('stylelint-webpack-plugin');
 
 const nodeEnv = process.env.NODE_ENV;
 const common = {
@@ -12,6 +13,7 @@ const common = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].js',
+    publicPath: '/',
   },
 
   resolve: {
@@ -69,22 +71,21 @@ const common = {
       },
     }),
     new webpack.NamedModulesPlugin(),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
-      minChunks: module => module.context && module.context.indexOf('node_modules') !== -1,
-    }),
+    // new webpack.optimize.CommonsChunkPlugin({
+    //   name: 'vendor',
+    //   minChunks: module => module.context && module.context.indexOf('node_modules') !== -1,
+    // }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'src/index.html',
     }),
-    new StyleLintPlugin(),
-    new webpack.optimize.ModuleConcatenationPlugin(),
   ],
 };
 
 const dev = {
   entry: [
     'babel-polyfill',
+    'isomorphic-fetch',
     'react-hot-loader/patch',
     path.join(__dirname, 'src', 'index.js'),
   ],
@@ -102,8 +103,6 @@ const dev = {
     },
     stats: 'errors-only',
   },
-  bail: false,
-
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
   ],
@@ -112,6 +111,7 @@ const dev = {
 const prod = {
   entry: [
     'babel-polyfill',
+    'isomorphic-fetch',
     path.join(__dirname, 'src', 'index.js'),
   ],
   devtool: 'source-map',
@@ -126,27 +126,41 @@ const prod = {
     rules: [
       {
         test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: 'css-loader',
-        }),
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          // 'style-loader',
+        ],
       },
       {
         test: /\.scss$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: ['css-loader', 'resolve-url-loader', 'sass-loader?sourceMap'],
-        }),
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          // 'resolve-url-loader',
+          'sass-loader?sourceMap',
+        ],
       },
     ],
   },
 
   plugins: [
-    new ExtractTextPlugin({
+    new MiniCssExtractPlugin({
       filename: 'styles.[contenthash].css',
-      allChunks: true,
+      chunkFilename: '[id].css',
     }),
   ],
+
+  optimization: {
+    minimizer: [
+      new UglifyJsPlugin({
+        cache: true,
+        parallel: true,
+        sourceMap: true, // set to true if you want JS source maps
+      }),
+      new OptimizeCSSAssetsPlugin({}),
+    ],
+  },
 };
 
 console.log('NODE_ENV:', nodeEnv);

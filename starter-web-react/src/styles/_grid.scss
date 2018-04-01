@@ -1,0 +1,31 @@
+
+$breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px
+) !default;
+
+$grid-columns: 12 !default;
+$grid-gutter: 30px !default;
+
+@each $breakpoint in map-keys($breakpoints) {
+  $breakpoint-grid: (
+    columns: $grid-columns,
+    gutter: $grid-gutter,
+    media: map-get($breakpoints, $breakpoint)
+  );
+
+  @for $i from 1 through $grid-columns {
+    .col-#{$breakpoint}-#{$i} {
+      @include grid-media($breakpoint-grid) {
+        @include grid-column($i);
+      }
+    }
+  }
+}
+
+.grid {
+  @include grid-container;
+}
