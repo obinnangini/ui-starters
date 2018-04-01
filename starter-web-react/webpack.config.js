@@ -55,7 +55,7 @@ const common = {
       },
       {
         test: /\.scss$/,
-        use: ['style-loader', 'css-loader', 'resolve-url-loader', 'sass-loader?sourceMap'],
+        use: ['style-loader', 'css-loader', 'sass-loader?sourceMap'],
       },
       {
         test: /\.(png|jpe?g|gif|svg|woff2?|eot|ttf|otf)(\?.*)?$/,
@@ -71,10 +71,6 @@ const common = {
       },
     }),
     new webpack.NamedModulesPlugin(),
-    // new webpack.optimize.CommonsChunkPlugin({
-    //   name: 'vendor',
-    //   minChunks: module => module.context && module.context.indexOf('node_modules') !== -1,
-    // }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'src/index.html',
@@ -117,7 +113,9 @@ const prod = {
   devtool: 'source-map',
 
   output: {
+    path: path.resolve(__dirname, 'dist'),
     filename: '[name].[chunkhash].js',
+    publicPath: '/',
   },
 
   bail: true,
@@ -129,7 +127,6 @@ const prod = {
         use: [
           MiniCssExtractPlugin.loader,
           'css-loader',
-          // 'style-loader',
         ],
       },
       {
@@ -137,7 +134,6 @@ const prod = {
         use: [
           MiniCssExtractPlugin.loader,
           'css-loader',
-          // 'resolve-url-loader',
           'sass-loader?sourceMap',
         ],
       },
