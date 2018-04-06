@@ -1,6 +1,7 @@
 {
   "extends": "stylelint-config-sass-guidelines",
   "rules": {
+    "color-hex-case": "upper",
     "order/properties-alphabetical-order": null,
     "property-no-vendor-prefix": null,
     "selector-no-qualifying-type": null
